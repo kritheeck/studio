@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const doctors = [
   {
+    id: "d1",
     name: "Dr. Emily Carter",
     specialty: "Cardiologist",
     status: "Available",
@@ -29,6 +31,7 @@ const doctors = [
     price: 150,
   },
   {
+    id: "d2",
     name: "Dr. Ben Adams",
     specialty: "Pediatrician",
     status: "Available",
@@ -36,6 +39,7 @@ const doctors = [
     price: 120,
   },
   {
+    id: "d3",
     name: "Dr. Sophia Chen",
     specialty: "Dermatologist",
     status: "Busy",
@@ -48,13 +52,14 @@ const availableTimes = [
   "09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM", "04:00 PM"
 ];
 
-type Doctor = (typeof doctors)[0];
+export type Doctor = (typeof doctors)[0];
 
 export default function ConsultPage() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleBookingClick = (doctor: Doctor) => {
     setSelectedDoctor(doctor);
@@ -66,9 +71,11 @@ export default function ConsultPage() {
     if (selectedDoctor && selectedDate && selectedTime) {
       toast({
         title: "Booking Confirmed!",
-        description: `Your appointment with ${selectedDoctor.name} is set for ${format(selectedDate, "PPP")} at ${selectedTime}.`,
+        description: `Your appointment with ${selectedDoctor.name} is set. You will be redirected to the session.`,
       });
       setSelectedDoctor(null);
+      // Redirect to the session page
+      router.push(`/consult/session?doctor=${selectedDoctor.id}`);
     }
   };
 
@@ -161,7 +168,7 @@ export default function ConsultPage() {
                 onClick={handleConfirmBooking}
                 disabled={!selectedDate || !selectedTime}
               >
-                Confirm Booking
+                Confirm Booking & Join
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -170,3 +177,5 @@ export default function ConsultPage() {
     </AppShell>
   );
 }
+
+    

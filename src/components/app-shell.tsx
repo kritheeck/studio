@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter, usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import {
   SidebarProvider,
   Sidebar,
@@ -27,6 +27,7 @@ import {
   HeartPulse,
   Sparkles,
   FilePenLine,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -59,9 +60,20 @@ const pageTitles: { [key: string]: string } = {
   "/validation": "Prescription Validation",
   "/reformat": "Prescription Reformatting",
   "/consult": "Doctor Consultation",
+  "/consult/session": "Virtual Consultation",
   "/locate": "Nearby Hospitals & Pharmacies",
   "/pricing": "Medication Price Comparison",
 };
+
+function getPageTitle(pathname: string) {
+  if (pageTitles[pathname]) {
+    return pageTitles[pathname];
+  }
+  if (pathname.startsWith('/consult/session')) {
+    return "Virtual Consultation";
+  }
+  return "MediCompass";
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, logout } = useAuth();
@@ -102,7 +114,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
                   tooltip={item.label}
                 >
                   <Link href={item.href}>
@@ -130,7 +142,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2">
             <SidebarTrigger className="md:hidden" />
             <h1 className="text-xl font-semibold">
-              {pageTitles[pathname] || "MediCompass"}
+              {getPageTitle(pathname)}
             </h1>
           </div>
           <DropdownMenu>
@@ -161,9 +173,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6">
+          <Suspense fallback={<div className="flex h-full w-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+            {children}
+          </Suspense>
+        </main>
         <Chatbot />
       </SidebarInset>
     </SidebarProvider>
   );
 }
+    
