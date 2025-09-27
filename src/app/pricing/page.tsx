@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Search, PlusCircle, AlertTriangle, Loader2, Info, ShoppingCart, Trash2 } from "lucide-react";
-import { getMedicationInfo, MedicationInfoOutput } from "@/ai/flows/medication-info-flow";
-import { getMedicationPrices, MedicationPrice } from "@/ai/flows/medication-pricing-flow";
+import { getMedicationInfo, type MedicationInfoOutput } from "@/ai/flows/medication-info-flow";
+import { getMedicationPrices, type MedicationPrice } from "@/ai/flows/medication-pricing-flow";
 import { useToast } from "@/hooks/use-toast";
 
 type Medication = MedicationPrice & { id: number };

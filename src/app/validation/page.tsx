@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { validatePrescription, PrescriptionValidationOutput } from "@/ai/flows/prescription-validation-flow";
+import { validatePrescription, type PrescriptionValidationOutput } from "@/ai/flows/prescription-validation-flow";
 import { Loader2, ShieldCheck, ShieldAlert } from "lucide-react";
 
 export default function ValidationPage() {

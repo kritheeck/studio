@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const PrescriptionReformattingInputSchema = z.object({
+const PrescriptionReformattingInputSchema = z.object({
   patientId: z.string().describe("The patient's identifier (to be removed)."),
   doctorId: z.string().describe("The prescribing doctor's identifier (to be removed)."),
   patientName: z.string().describe("The patient's full name."),
@@ -25,7 +25,7 @@ export type PrescriptionReformattingInput = z.infer<
   typeof PrescriptionReformattingInputSchema
 >;
 
-export const PrescriptionReformattingOutputSchema = z.object({
+const PrescriptionReformattingOutputSchema = z.object({
   reformattedText: z.string().describe('The plain text, patient-friendly version of the prescription.'),
 });
 export type PrescriptionReformattingOutput = z.infer<

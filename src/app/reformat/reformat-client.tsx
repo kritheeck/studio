@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { reformatPrescription, PrescriptionReformattingOutput } from "@/ai/flows/prescription-reformatting-flow";
+import { reformatPrescription, type PrescriptionReformattingOutput } from "@/ai/flows/prescription-reformatting-flow";
 import { Loader2, FilePenLine, FileText } from "lucide-react";
 
 export function ReformatClient() {
