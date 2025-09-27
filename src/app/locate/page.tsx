@@ -104,16 +104,16 @@ export default function LocatePage() {
                 </CardHeader>
                 <CardContent>
                     <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden border">
-                         <Image 
-                            src="https://picsum.photos/seed/map/1200/800" 
-                            alt="Map of nearby services" 
-                            fill
-                            style={{ objectFit: 'cover' }}
-                            data-ai-hint="map city"
-                        />
-                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                            <p className="text-white text-lg font-semibold bg-black/50 px-4 py-2 rounded-md">Map Placeholder</p>
-                        </div>
+                         <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.297449914619!2d-122.41941548468115!3d37.77492957975938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858064a13a7c6b%3A0x1d5f2f4a3e7b1e1c!2sSan%20Francisco%20City%20Hall!5e0!3m2!1sen!2sus!4v1626291931833!5m2!1sen!2sus"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen={true}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="Google Maps Embed"
+                        ></iframe>
                     </div>
                 </CardContent>
             </Card>
