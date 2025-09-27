@@ -63,7 +63,11 @@ const healthAdvisorFlow = ai.defineFlow(
     outputSchema: HealthAdvisorOutputSchema,
   },
   async input => {
-    const {output} = await healthAdvisorPrompt(input);
-    return output!;
+    const llmResponse = await ai.generate({
+      model: 'googleai/gemini-pro',
+      prompt: healthAdvisorPrompt.compile({input}),
+      output: {schema: HealthAdvisorOutputSchema},
+    });
+    return llmResponse.output!;
   }
 );
