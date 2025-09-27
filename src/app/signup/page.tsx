@@ -16,8 +16,9 @@ import { HeartPulse, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
@@ -32,9 +33,20 @@ export default function SignupPage() {
     setIsLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      if (userCredential.user) {
-        await updateProfile(userCredential.user, {
+      const user = userCredential.user;
+
+      if (user) {
+        // Update Firebase Auth profile
+        await updateProfile(user, {
           displayName: fullName,
+        });
+
+        // Create user document in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          displayName: fullName,
+          email: user.email,
+          createdAt: serverTimestamp(),
         });
       }
       // The onAuthStateChanged in AuthProvider will handle the redirect
