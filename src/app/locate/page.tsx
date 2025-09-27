@@ -10,13 +10,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from 'next/image';
 
 const hospitalsData = [
-  { name: "City General Hospital", address: "123 Health St, Metroville", distance: "2.5 miles" },
-  { name: "St. Luke's Medical Center", address: "456 Wellness Ave, Metroville", distance: "4.1 miles" },
+  { name: "Appolo Hospital", address: "Kodambakkam", distance: "0.2 miles" },
+  { name: "Medway Hospital", address: "Kodambakkam", distance: "0.1 miles" },
 ];
 
 const pharmaciesData = [
-  { name: "MediCare Pharmacy", address: "789 Cure Rd, Metroville", distance: "1.2 miles" },
-  { name: "The Drug Store", address: "101 Pharmacy Ln, Metroville", distance: "1.8 miles" },
+  { name: "Medway Pharmacy", address: "789 kodambakkam, Metroville", distance: "1.2 miles" },
+  { name: "The Drug Store", address: "101 kodambak, Metroville", distance: "1.8 miles" },
 ];
 
 export default function LocatePage() {
