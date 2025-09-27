@@ -1,10 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User } from "lucide-react";
+import { User, Calendar as CalendarIcon, Clock } from "lucide-react";
+import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 const doctors = [
   {
@@ -12,22 +26,52 @@ const doctors = [
     specialty: "Cardiologist",
     status: "Available",
     image: PlaceHolderImages.find(img => img.id === "doctor-1"),
+    price: 150,
   },
   {
     name: "Dr. Ben Adams",
     specialty: "Pediatrician",
     status: "Available",
     image: PlaceHolderImages.find(img => img.id === "doctor-2"),
+    price: 120,
   },
   {
     name: "Dr. Sophia Chen",
     specialty: "Dermatologist",
     status: "Busy",
     image: PlaceHolderImages.find(img => img.id === "doctor-3"),
+    price: 180,
   },
 ];
 
+const availableTimes = [
+  "09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM", "04:00 PM"
+];
+
+type Doctor = (typeof doctors)[0];
+
 export default function ConsultPage() {
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleBookingClick = (doctor: Doctor) => {
+    setSelectedDoctor(doctor);
+    setSelectedDate(new Date());
+    setSelectedTime(null);
+  };
+
+  const handleConfirmBooking = () => {
+    if (selectedDoctor && selectedDate && selectedTime) {
+      toast({
+        title: "Booking Confirmed!",
+        description: `Your appointment with ${selectedDoctor.name} is set for ${format(selectedDate, "PPP")} at ${selectedTime}.`,
+      });
+      setSelectedDoctor(null);
+    }
+  };
+
   return (
     <AppShell>
       <div className="space-y-6">
@@ -53,15 +97,76 @@ export default function ConsultPage() {
                     {doctor.status}
                   </Badge>
                 </div>
-                <Button className="w-full" disabled={doctor.status !== "Available"}>
+                 <div className="flex justify-between items-center mb-4">
+                  <span>Price</span>
+                  <p className="font-semibold">${doctor.price} / session</p>
+                </div>
+                <Button 
+                  className="w-full" 
+                  disabled={doctor.status !== "Available"}
+                  onClick={() => handleBookingClick(doctor)}
+                >
                   Book Consultation
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
-        <p className="text-sm text-muted-foreground text-center">Note: This is a placeholder UI. The Doctor Consultation API is not integrated.</p>
       </div>
+
+      {selectedDoctor && (
+        <Dialog open={!!selectedDoctor} onOpenChange={() => setSelectedDoctor(null)}>
+          <DialogContent className="sm:max-w-[425px] md:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Book Consultation with {selectedDoctor.name}</DialogTitle>
+              <DialogDescription>
+                Select a date and time for your appointment. Consultation fee: ${selectedDoctor.price}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+              <div className="flex justify-center">
+                 <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                  className="rounded-md border"
+                />
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold flex items-center gap-2"><Clock className="h-5 w-5" /> Select a Time Slot</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {availableTimes.map((time) => (
+                    <Button
+                      key={time}
+                      variant={selectedTime === time ? "default" : "outline"}
+                      onClick={() => setSelectedTime(time)}
+                    >
+                      {time}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+               <div className="w-full text-left text-sm text-muted-foreground">
+                {selectedDate && selectedTime && (
+                  <p className="font-semibold flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4" />
+                    Appointment: {format(selectedDate, "EEE, MMM d, yyyy")} at {selectedTime}
+                  </p>
+                )}
+              </div>
+              <Button 
+                onClick={handleConfirmBooking}
+                disabled={!selectedDate || !selectedTime}
+              >
+                Confirm Booking
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </AppShell>
   );
 }
