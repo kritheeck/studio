@@ -26,6 +26,7 @@ import {
   User,
   HeartPulse,
   Sparkles,
+  FilePenLine,
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -45,6 +46,7 @@ const navigationItems = [
   { href: "/analysis", icon: FileScan, label: "Analysis" },
   { href: "/advisor", icon: Sparkles, label: "AI Advisor" },
   { href: "/validation", icon: BadgeCheck, label: "Validation" },
+  { href: "/reformat", icon: FilePenLine, label: "Reformat" },
   { href: "/consult", icon: Video, label: "Consult" },
   { href: "/locate", icon: MapPin, label: "Find Services" },
   { href: "/pricing", icon: DollarSign, label: "Pricing" },
@@ -55,6 +57,7 @@ const pageTitles: { [key: string]: string } = {
   "/analysis": "Prescription Analysis",
   "/advisor": "AI Health Advisor",
   "/validation": "Prescription Validation",
+  "/reformat": "Prescription Reformatting",
   "/consult": "Doctor Consultation",
   "/locate": "Nearby Hospitals & Pharmacies",
   "/pricing": "Medication Price Comparison",

@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, BadgeCheck, DollarSign, FileScan, MapPin, Sparkles, Video } from "lucide-react";
+import { ArrowRight, BadgeCheck, DollarSign, FileScan, MapPin, Sparkles, Video, FilePenLine } from "lucide-react";
 import Link from "next/link";
 
 const features = [
@@ -21,6 +21,12 @@ const features = [
     description: "Validate your prescription with healthcare databases.",
     href: "/validation",
     icon: BadgeCheck,
+  },
+   {
+    title: "Prescription Reformatting",
+    description: "Convert prescription data into a patient-friendly format.",
+    href: "/reformat",
+    icon: FilePenLine,
   },
   {
     title: "Doctor Consultation",
