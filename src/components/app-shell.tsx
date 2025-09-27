@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from "@/contexts/auth-context";
@@ -72,22 +73,17 @@ function getPageTitle(pathname: string) {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && !isAuthenticated) {
+    if (!isLoading && !isAuthenticated) {
       router.push("/");
     }
-  }, [isAuthenticated, isMounted, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  if (!isMounted || !isAuthenticated) {
+  if (isLoading || !isAuthenticated) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <HeartPulse className="h-12 w-12 animate-pulse text-primary" />
@@ -145,7 +141,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
+                  <AvatarImage src={user?.photoURL ?? undefined} alt={user?.displayName ?? ""} />
                   <AvatarFallback>
                     <User />
                   </AvatarFallback>
@@ -155,9 +151,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Patient User</p>
+                  <p className="text-sm font-medium leading-none">{user?.displayName || "Patient User"}</p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    patient@medicompass.com
+                    {user?.email || "patient@medicompass.com"}
                   </p>
                 </div>
               </DropdownMenuLabel>
@@ -179,4 +175,3 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-    
