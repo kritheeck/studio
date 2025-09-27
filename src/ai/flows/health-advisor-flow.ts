@@ -47,6 +47,7 @@ const healthAdvisorPrompt = ai.definePrompt({
   name: 'healthAdvisorPrompt',
   input: {schema: HealthAdvisorInputSchema},
   output: {schema: HealthAdvisorOutputSchema},
+  model: 'googleai/gemini-pro',
   prompt: `You are an AI Health Advisor. Based on the following symptoms, provide a list of potential over-the-counter medications, dietary recommendations (foods to eat and foods to avoid), and general lifestyle advice.
 
   IMPORTANT: Include a disclaimer that this is not a substitute for professional medical advice.
