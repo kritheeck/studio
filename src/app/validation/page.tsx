@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -12,41 +11,28 @@ import { validatePrescription, PrescriptionValidationOutput } from "@/ai/flows/p
 import { Loader2, ShieldCheck, ShieldAlert } from "lucide-react";
 
 export default function ValidationPage() {
-  const [patientId, setPatientId] = useState("");
-  const [doctorId, setDoctorId] = useState("");
-  const [prescriptionDetails, setPrescriptionDetails] = useState('{ "medication": "Lisinopril", "dosage": "10mg", "frequency": "once daily" }');
+  const [prescriptionDetails, setPrescriptionDetails] = useState("Lisinopril 10mg, once daily");
   const [isLoading, setIsLoading] = useState(false);
   const [validationResult, setValidationResult] = useState<PrescriptionValidationOutput | null>(null);
   const { toast } = useToast();
 
-  const isFormValid = () => patientId.trim() && doctorId.trim() && prescriptionDetails.trim();
+  const isFormValid = () => prescriptionDetails.trim();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid()) {
       toast({
         title: "Incomplete Form",
-        description: "Please fill out all fields to validate the prescription.",
+        description: "Please enter the prescription details to validate.",
         variant: "destructive",
       });
       return;
     }
     
-    try {
-      JSON.parse(prescriptionDetails);
-    } catch (error) {
-       toast({
-        title: "Invalid JSON",
-        description: "The prescription details must be in a valid JSON format.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
     setValidationResult(null);
     try {
-      const result = await validatePrescription({ patientId, doctorId, prescriptionDetails });
+      const result = await validatePrescription({ prescriptionText: prescriptionDetails });
       setValidationResult(result);
     } catch (err) {
       console.error(err);
@@ -67,38 +53,19 @@ export default function ValidationPage() {
         <Card>
           <CardHeader>
             <CardTitle>Prescription Validation</CardTitle>
-            <CardDescription>Cross-reference prescription data against AI-powered checks for validation.</CardDescription>
+            <CardDescription>Enter prescription details to cross-reference against AI-powered checks for validation.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="patient-id">Patient ID</Label>
-                  <Input 
-                    id="patient-id" 
-                    placeholder="e.g., P-12345" 
-                    value={patientId}
-                    onChange={(e) => setPatientId(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="doctor-id">Prescribing Doctor ID</Label>
-                  <Input 
-                    id="doctor-id" 
-                    placeholder="e.g., D-67890" 
-                    value={doctorId}
-                    onChange={(e) => setDoctorId(e.target.value)}
-                  />
-                </div>
-              </div>
               <div className="space-y-2">
-                <Label htmlFor="prescription-details">Prescription Details (JSON format)</Label>
+                <Label htmlFor="prescription-details">Prescription Details</Label>
                 <Textarea
                   id="prescription-details"
+                  placeholder="e.g., Lisinopril 10mg, one tablet daily"
                   value={prescriptionDetails}
                   onChange={(e) => setPrescriptionDetails(e.target.value)}
-                  className="font-code"
-                  rows={6}
+                  className="font-sans"
+                  rows={4}
                 />
               </div>
               <Button type="submit" disabled={isLoading || !isFormValid()}>

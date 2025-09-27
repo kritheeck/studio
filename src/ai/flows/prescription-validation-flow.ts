@@ -12,13 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const PrescriptionValidationInputSchema = z.object({
-  patientId: z.string().describe("The patient's identifier."),
-  doctorId: z.string().describe("The prescribing doctor's identifier."),
-  prescriptionDetails: z
-    .string()
-    .describe(
-      'A JSON string with prescription details, e.g., { "medication": "Lisinopril", "dosage": "10mg", "frequency": "once daily" }'
-    ),
+  prescriptionText: z.string().describe('The plain text of the prescription to be validated.'),
 });
 export type PrescriptionValidationInput = z.infer<
   typeof PrescriptionValidationInputSchema
@@ -43,12 +37,10 @@ const validationPrompt = ai.definePrompt({
   input: {schema: PrescriptionValidationInputSchema},
   output: {schema: PrescriptionValidationOutputSchema},
   prompt: `You are a prescription validation AI. Your task is to determine if a given prescription is safe based on the details provided.
-Analyze the following prescription data.
-- Patient ID: {{{patientId}}}
-- Doctor ID: {{{doctorId}}}
-- Details: {{{prescriptionDetails}}}
+Analyze the following prescription text:
+"{{{prescriptionText}}}"
 
-Based on common medical standards, flag any obvious and severe errors, such as extremely high dosages for common medications, dangerous combinations if multiple drugs are listed, or non-sensical frequencies. You do not have patient history; base your assessment only on the provided data. For most standard prescriptions, you should deem it safe. Only flag high-risk or clearly erroneous entries.
+Based on common medical standards, flag any obvious and severe errors, such as extremely high dosages for common medications, dangerous combinations if multiple drugs are listed, or non-sensical frequencies. You do not have patient history; base your assessment only on the provided text. For most standard prescriptions, you should deem it safe. Only flag high-risk or clearly erroneous entries.
 
 Is this prescription safe? Provide a reason for your decision.
 `,
