@@ -11,29 +11,18 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Search, PlusCircle, AlertTriangle, Loader2, Info, ShoppingCart, Trash2 } from "lucide-react";
 import { getMedicationInfo, MedicationInfoOutput } from "@/ai/flows/medication-info-flow";
+import { getMedicationPrices, MedicationPrice } from "@/ai/flows/medication-pricing-flow";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for medication pricing
-const allMedications = [
-  { id: 1, name: "Atorvastatin 20mg", pharmacy: "MediCare Pharmacy", price: 15.99, stock: "In Stock" },
-  { id: 2, name: "Atorvastatin 20mg", pharmacy: "The Drug Store", price: 17.50, stock: "In Stock" },
-  { id: 3, name: "Lisinopril 10mg", pharmacy: "MediCare Pharmacy", price: 12.50, stock: "In Stock" },
-  { id: 4, name: "Lisinopril 10mg", pharmacy: "HealthFirst Pharma", price: 11.95, stock: "Low Stock" },
-  { id: 5, name: "Metformin 500mg", pharmacy: "City General Pharmacy", price: 8.20, stock: "In Stock" },
-  { id: 6, name: "Metformin 500mg", pharmacy: "The Drug Store", price: 9.00, stock: "Out of Stock" },
-  { id: 7, name: "Amlodipine 5mg", pharmacy: "MediCare Pharmacy", price: 14.30, stock: "In Stock" },
-  { id: 8, name: "Amoxicillin 250mg", pharmacy: "HealthFirst Pharma", price: 22.00, stock: "In Stock" },
-];
-
-type Medication = typeof allMedications[0];
+type Medication = MedicationPrice & { id: number };
 
 export default function PricingPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<Medication[]>([]);
   const [bill, setBill] = useState<Medication[]>([]);
   const [selectedMedInfo, setSelectedMedInfo] = useState<MedicationInfoOutput | null>(null);
@@ -41,16 +30,31 @@ export default function PricingPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
       setSearchResults([]);
       return;
     }
-    const results = allMedications.filter(med =>
-      med.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setSearchResults(results);
+
+    setIsSearching(true);
+    setSearchResults([]);
+    try {
+      const results = await getMedicationPrices({ medicationName: searchQuery });
+      // Add a unique ID to each result for React keys and bill management
+      const resultsWithIds = results.map((med, index) => ({ ...med, id: Date.now() + index }));
+      setSearchResults(resultsWithIds);
+    } catch (err) {
+        console.error(err);
+        const errorMessage = err instanceof Error ? err.message : "An unknown error occurred.";
+        toast({
+            title: "Search Failed",
+            description: "Could not fetch medication prices. " + errorMessage,
+            variant: "destructive",
+        });
+    } finally {
+        setIsSearching(false);
+    }
   };
 
   const addToBill = (med: Medication) => {
@@ -105,8 +109,18 @@ export default function PricingPage() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                          />
-                        <Button type="submit">
-                            <Search className="mr-2 h-4 w-4" /> Search
+                        <Button type="submit" disabled={isSearching}>
+                           {isSearching ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Searching...
+                            </>
+                          ) : (
+                            <>
+                              <Search className="mr-2 h-4 w-4" /> 
+                              Search
+                            </>
+                          )}
                         </Button>
                     </form>
                 </CardContent>
@@ -236,3 +250,5 @@ export default function PricingPage() {
     </AppShell>
   );
 }
+
+    
