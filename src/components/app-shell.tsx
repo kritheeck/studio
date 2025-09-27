@@ -45,7 +45,6 @@ import { Chatbot } from "@/components/chatbot";
 const navigationItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/analysis", icon: FileScan, label: "Analysis" },
-  { href: "/advisor", icon: Sparkles, label: "AI Advisor" },
   { href: "/validation", icon: BadgeCheck, label: "Validation" },
   { href: "/reformat", icon: FilePenLine, label: "Reformat" },
   { href: "/consult", icon: Video, label: "Consult" },
@@ -56,7 +55,6 @@ const navigationItems = [
 const pageTitles: { [key: string]: string } = {
   "/dashboard": "Dashboard",
   "/analysis": "Prescription Analysis",
-  "/advisor": "AI Health Advisor",
   "/validation": "Prescription Validation",
   "/reformat": "Prescription Reformatting",
   "/consult": "Doctor Consultation",

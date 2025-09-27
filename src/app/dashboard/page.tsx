@@ -11,12 +11,6 @@ const features = [
     icon: FileScan,
   },
   {
-    title: "AI Health Advisor",
-    description: "Get AI-powered health advice from symptoms.",
-    href: "/advisor",
-    icon: Sparkles,
-  },
-  {
     title: "Prescription Validation",
     description: "Validate your prescription with healthcare databases.",
     href: "/validation",
