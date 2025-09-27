@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, BadgeCheck, DollarSign, FileScan, MapPin, Video } from "lucide-react";
+import { ArrowRight, BadgeCheck, DollarSign, FileScan, MapPin, Sparkles, Video } from "lucide-react";
 import Link from "next/link";
 
 const features = [
@@ -9,6 +9,12 @@ const features = [
     description: "Upload and analyze your prescriptions using AI.",
     href: "/analysis",
     icon: FileScan,
+  },
+  {
+    title: "AI Health Advisor",
+    description: "Get AI-powered health advice from symptoms.",
+    href: "/advisor",
+    icon: Sparkles,
   },
   {
     title: "Prescription Validation",
