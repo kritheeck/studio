@@ -1,48 +1,14 @@
-'use server';
-
-/**
- * @fileOverview A conversational AI chatbot for the MediCompass application.
- *
- * - chat - Handles a conversational turn.
- * - ChatInput - The input type for the chat function.
- * - ChatOutput - The return type for the chat function.
- */
-
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const MessageSchema = z.object({
-  role: z.enum(['user', 'model']),
-  content: z.string(),
-});
-
-const ChatInputSchema = z.object({
-  history: z.array(MessageSchema).describe('The conversation history.'),
-  message: z.string().describe("The user's latest message."),
-});
-export type ChatInput = z.infer<typeof ChatInputSchema>;
-
-const ChatOutputSchema = z.object({
-  response: z.string().describe("The AI's response message."),
-});
-export type ChatOutput = z.infer<typeof ChatOutputSchema>;
-
-
-export async function chat(input: ChatInput): Promise<ChatOutput> {
-  return chatbotFlow(input);
-}
-
 const chatbotPrompt = ai.definePrompt(
   {
     name: 'chatbotPrompt',
     input: {schema: ChatInputSchema},
     output: {schema: ChatOutputSchema},
+    model: 'googleai/gemini-2.5-flash',
     prompt: `You are MediBot, a friendly and helpful AI assistant for the MediCompass application.
 Your goal is to assist users with questions about the app's features and provide general, non-prescriptive health and wellness information.
 
 **App Features You Can Explain:**
 - **Prescription Analysis:** Users upload a prescription to get an AI-powered summary, drug interactions, and dosage concerns.
-- **AI Health Advisor:** Users describe symptoms to get AI suggestions for medications, diet, and lifestyle.
 - **Doctor Consultation:** Users can book virtual consultations with doctors.
 - **Find Services:** Users can find nearby hospitals and pharmacies.
 - **Medication Pricing:** Users can search for and compare medication prices.
