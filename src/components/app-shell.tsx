@@ -38,6 +38,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Chatbot } from "@/components/chatbot";
 
 const navigationItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -158,6 +159,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </DropdownMenu>
         </header>
         <main className="flex-1 p-4 sm:p-6">{children}</main>
+        <Chatbot />
       </SidebarInset>
     </SidebarProvider>
   );
