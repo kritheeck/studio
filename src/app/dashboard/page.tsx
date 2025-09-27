@@ -16,12 +16,6 @@ const features = [
     href: "/validation",
     icon: BadgeCheck,
   },
-   {
-    title: "Prescription Reformatting",
-    description: "Convert prescription data into a patient-friendly format.",
-    href: "/reformat",
-    icon: FilePenLine,
-  },
   {
     title: "Doctor Consultation",
     description: "Connect with doctors for virtual consultations.",
