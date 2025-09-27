@@ -43,6 +43,7 @@ const analyzePrescriptionPrompt = ai.definePrompt({
   name: 'analyzePrescriptionPrompt',
   input: {schema: AnalyzePrescriptionInputSchema},
   output: {schema: AnalyzePrescriptionOutputSchema},
+  model: 'googleai/gemini-pro',
   prompt: `You are a medical expert analyzing a prescription.
 
   Provide a summarized overview of the medication information. Identify and flag any potential drug interactions and dosage concerns.
